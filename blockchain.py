@@ -25,6 +25,7 @@ class Blockchain:
         """
 
         parsed_url = urlparse(address)
+        print(parsed_url)
         if parsed_url.netloc:
             self.nodes.add(parsed_url.netloc)
         elif parsed_url.path:
@@ -32,6 +33,8 @@ class Blockchain:
             self.nodes.add(parsed_url.path)
         else:
             raise ValueError('Invalid URL')
+        for node in self.nodes:
+            print(node)
 
     def valid_chain(self, chain):
         """
@@ -263,11 +266,14 @@ def register_nodes():
 
     for node in nodes:
         blockchain.register_node(node)
+        print(node)
 
     response = {
         'message': 'New nodes have been added',
         'total_nodes': list(blockchain.nodes),
     }
+
+
     return jsonify(response), 201
 
 
