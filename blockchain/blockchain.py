@@ -201,7 +201,32 @@ def simple_test():
     print(len(blockchain))
 
 
+def test_bike():
+    from ecdsa import SigningKey, NIST384p
+    from transaction import Transaction
+    sk = SigningKey.generate(curve=NIST384p)
+    t1 = Transaction("Test for transaction with bike")
+
+    blockchain = Blockchain()
+
+    transactions = [Transaction(f"Transaction for bike {i}") for i in range(10)]
+    for t in transactions:
+        t.sign(sk)
+        blockchain.add_transaction(t)
+    Transaction.log(transactions)
+
+    print(blockchain)
+    for _ in range(4):
+        b = blockchain.new_block()
+        b.mine()
+        blockchain.extend_chain(b)
+
+    print("Test for blockchain validity :", b.validity())
+
+    blockchain.log()
+
 if __name__ == '__main__':
     print("Blockchain test")
-    simple_test()
-    merge_test()
+    # simple_test()
+    # merge_test()
+    test_bike()

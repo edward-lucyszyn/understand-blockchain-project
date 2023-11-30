@@ -178,7 +178,29 @@ def test():
     for b in blocks:
         b.log()
 
+def test_bike():
+    from ecdsa import SigningKey, NIST384p
+    from transaction import Transaction
+    sk = SigningKey.generate(curve=NIST384p)
+    t1 = Transaction("Test for transaction with bike")
+    transactions = [Transaction(f"Transaction for bike {i}") for i in range(10)]
+    for t in transactions:
+        t.sign(sk)
+    Transaction.log(transactions)
+    blocks = [Block()]
+    blocks.append(blocks[0].next(transactions))
 
+    for b in blocks:
+        b.log()
+
+    print("Test for validity :", blocks[1].validity())
+    blocks[1].mine()
+
+    for b in blocks:
+        b.log()
+    
+    
 if __name__ == '__main__':
     print("Test Block")
-    test()
+    # test()
+    test_bike()

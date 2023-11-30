@@ -184,10 +184,23 @@ def test2():
     print(sk2.verifying_key.to_pem().hex())
     print(sk.verifying_key.to_pem().hex() == sk2.verifying_key.to_pem().hex())
 
+def test_bike():
+    from ecdsa import SigningKey, NIST384p
+    sk = SigningKey.generate(curve=NIST384p)
+    t1 = Transaction("Test for transaction with bike 1")
+    t2 = Transaction("Test for transaction with bike 2")
+    Transaction.log([t1, t2])
+    print("My secret key is :", sk.to_pem().hex())
+    t1.sign(sk)
+    t2.sign(sk)
+    Transaction.log([t1, t2])
+    print("Verifcation of transaction :", t1.verify())
+
 
 if __name__ == "__main__":
     print("Test Transaction")
-    test0()
-    test1()
-    test2()
+    # test0()
+    # test1()
+    # test2()
+    test_bike()
 
