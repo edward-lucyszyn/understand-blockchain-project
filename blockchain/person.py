@@ -1,13 +1,12 @@
-# create a class called person.py
+import hashlib
 from ecdsa import SigningKey
 
 sk = SigningKey.generate()
 
-
 class person:  # class name
     def __init__(self, name):  # constructor
         self.name = name
-        self.sk = SigningKey.generate()
+        self.sk = SigningKey.generate('password')
         self.pk = sk.get_verifying_key()
 
     def get_has_name(self):  # method

@@ -122,7 +122,7 @@ class Blockchain(object):
             return self
         else:
             self.chain = other.chain[:]
-            self.mempool = other.mempool[:]
+            #self.mempool = other.mempool[:]
         return self
 
     def log(self):
