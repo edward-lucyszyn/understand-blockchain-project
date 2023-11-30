@@ -1,16 +1,20 @@
 import hashlib
 import json
 from textwrap import dedent
+
 from time import time
 from uuid import uuid4
+
+import requests
 from urllib.parse import urlparse
-from flask import Flask, jsonify, request
+
+from flask import Flask, request, jsonify
+
 
 class Blockchain(object):
     def __init__(self):
-        self.current_transactions = []
         self.chain = []
-
+        self.current_transactions = []
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
 
@@ -74,6 +78,7 @@ class Blockchain(object):
             return True
 
         return False
+
     def register_node(self, address):
         """
         Add a new node to the list of nodes
@@ -83,6 +88,7 @@ class Blockchain(object):
 
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
+
     def new_block(self, proof, previous_hash=None):
         """
         Create a new Block in the Blockchain
@@ -113,6 +119,7 @@ class Blockchain(object):
         :param amount: <int> Amount
         :return: <int> The index of the Block that will hold this transaction
         """
+
         self.current_transactions.append({
             'sender': sender,
             'recipient': recipient,
@@ -120,10 +127,6 @@ class Blockchain(object):
         })
 
         return self.last_block['index'] + 1
-
-    @property
-    def last_block(self):
-        return self.chain[-1]
 
     @staticmethod
     def hash(block):
@@ -136,6 +139,11 @@ class Blockchain(object):
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
+
+    @property
+    def last_block(self):
+        # Returns the last Block in the chain
+        return self.chain[-1]
 
     def proof_of_work(self, last_proof):
         """
@@ -165,7 +173,9 @@ class Blockchain(object):
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
 
-# Instantiate our Node
+    # Instantiate our Node
+
+
 app = Flask(__name__)
 
 # Generate a globally unique address for this node
@@ -177,34 +187,12 @@ blockchain = Blockchain()
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    # We run the proof of work algorithm to get the next proof...
-    last_block = blockchain.last_block
-    last_proof = last_block['proof']
-    proof = blockchain.proof_of_work(last_proof)
+    return "We'll mine a new Block"
 
-    # We must receive a reward for finding the proof.
-    # The sender is "0" to signify that this node has mined a new coin.
-    blockchain.new_transaction(
-        sender="0",
-        recipient=node_identifier,
-        amount=1,
-    )
-
-    # Forge the new Block by adding it to the chain
-    previous_hash = blockchain.hash(last_block)
-    block = blockchain.new_block(proof, previous_hash)
-
-    response = {
-        'message': "New Block Forged",
-        'index': block['index'],
-        'transactions': block['transactions'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
-    }
-    return jsonify(response), 200
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
+    return "We'll add a new transaction"
     values = request.get_json()
 
     # Check that the required fields are in the POST'ed data
@@ -225,6 +213,7 @@ def full_chain():
         'length': len(blockchain.chain),
     }
     return jsonify(response), 200
+
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
@@ -261,5 +250,6 @@ def consensus():
 
     return jsonify(response), 200
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=3000)
