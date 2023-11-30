@@ -1,3 +1,4 @@
+import hashlib
 
 from ecdsa import SigningKey
 import utils
@@ -5,6 +6,8 @@ import json
 from ecdsa import VerifyingKey, BadSignatureError
 from rich.console import Console
 from rich.table import Table
+import hashlib
+from twowheel import TwoWheel
 
 class Customer:
     def __init__(self, pk, name=None, description=None):
@@ -20,7 +23,7 @@ class Customer:
     @property
     def get_pk(self):
         return self.pk
-    
+
     @property
     def get_data(self):
         d = {
@@ -28,7 +31,7 @@ class Customer:
             'creation_date': self.creation_date
         }
         return d
-    
+
     @staticmethod
     def log(customers):
         """
@@ -53,15 +56,60 @@ class Customer:
         console = Console()
         console.print(table)
 
-def test():
+
+def test_customer():
     from ecdsa import SigningKey, NIST384p
     sk = SigningKey.generate(curve=NIST384p)
     pk = sk.get_verifying_key()
-    Maria  = Customer(pk, 'Maria')
+    Maria = Customer(pk, 'Maria')
     print(Maria.get_name)
     print(Maria.get_pk.to_pem().hex())
     print(Maria.get_data)
     Customer.log([Maria])
 
+def create_message_str(serialNo, hashPublicKeyBuyer):
+    d = {
+        "serialNo": serialNo,
+        "hashPublicKeyBuyer": hashPublicKeyBuyer
+    }
+    return str(d)
+
+def test_transaction():
+    from ecdsa import SigningKey, NIST384p
+    from blockchain import Blockchain
+    from transaction import Transaction
+    Blockchain = Blockchain()
+
+    sk_comp = SigningKey.generate(curve=NIST384p)
+    pk_comp = sk_comp.get_verifying_key()
+    Company = Customer(pk_comp, 'Company')
+    Customer.log([Company])
+
+    sk_paul = SigningKey.generate(curve=NIST384p)
+    pk_paul = sk_paul.get_verifying_key()
+    Paul = Customer(pk_paul, 'Paul')
+    Customer.log([Paul])
+
+    bike = TwoWheel('12313593452')
+    t1 = Transaction(create_message_str(bike.get_has_serial_number(), hashlib.sha256(Paul.get_pk.to_pem()).hexdigest()))
+    t1.sign(sk_comp)
+    Blockchain.add_transaction(t1)
+    Blockchain.log()
+    b = Blockchain.new_block()
+    b.mine()
+    Blockchain.extend_chain(b)
+    Blockchain.log()
+    print(Blockchain.search_owner(hashlib.sha256(Paul.get_pk.to_pem()).hexdigest(), bike.get_has_serial_number()))
+    t2 = Transaction(create_message_str(bike.get_has_serial_number(), hashlib.sha256(Paul.get_pk.to_pem()).hexdigest()))
+    t2.sign(sk_comp)
+    print(Blockchain.add_transaction(t2))
+
+
+    sk = SigningKey.generate(curve=NIST384p)
+    pk = sk.get_verifying_key()
+    Tom = Customer(pk, 'Tom')
+    bike = TwoWheel('123135934523')
+
 if __name__ == '__main__':
-    test()
+    #test_customer()
+    test_transaction()
