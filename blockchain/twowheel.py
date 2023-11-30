@@ -2,7 +2,7 @@
 import hashlib
 
 class twowheel(object):             
-    def __init__(self, serial_number, owner_sk):  
+    def __init__(self, serial_number):
         self.serial_number = serial_number
 
 
