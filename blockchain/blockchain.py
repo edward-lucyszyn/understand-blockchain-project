@@ -103,9 +103,7 @@ class Blockchain(object):
                 else:
                     all_transactions.append(self.chain[i].transactions[j])
 
-        return True 
-        
-        
+        return True
 
     def __len__(self):
         """
@@ -126,7 +124,6 @@ class Blockchain(object):
             self.chain = other.chain[:]
             self.mempool = other.mempool[:]
         return self
-
 
     def log(self):
         print(self)

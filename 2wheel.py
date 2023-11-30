@@ -1,5 +1,5 @@
 #create a class called 2_wheel_obj.py
-class 2wheel:             #class name
+class twowheel:             #class name
     def __init__(self, serial_number):  #constructor
         self.serial_number = serial_number
 
