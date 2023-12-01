@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This three days project is a collaborative effort by six individuals who completed the capped course on understanding blockchain. The project aims to apply the knowledge gained during the course and provide a practical demonstration of blockchain concepts with an example of a BikeChain. BikeChain is a blockchain designed for selling bikes and two-wheelers, maintaining the history of each bike and serving to check if a two-wheeler is stolen.
+This three days project is a collaborative effort by six individuals who completed the capped course on understanding blockchain at CentraleSupélec. The project aims to apply the knowledge gained during the course and provide a practical demonstration of blockchain concepts with an example of a BikeChain. BikeChain is a blockchain designed for selling bikes and two-wheelers, maintaining the history of each bike and serving to check if a two-wheeler is stolen.
 
 ## Contributors
 
