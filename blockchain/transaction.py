@@ -28,9 +28,9 @@ class IncompleteTransaction(Exception):
 
 
 class Transaction(object):
-        # messqge = hash of bike serial number
+        # message = hash of bike serial number, and the hash of the public key of the buyer
         # vk private key of the seller
-        # 
+
     def __init__(self, message, date=None, signature=None, vk=None, author=None):
         """
         Initialize a transaction. If date is None, the current time is used.

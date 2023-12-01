@@ -7,6 +7,7 @@ import config
 from block import Block, InvalidBlock
 from transaction import Transaction
 import utils
+import hashlib
 
 
 class Blockchain(object):
@@ -28,6 +29,8 @@ class Blockchain(object):
         if utils.str_to_time(transaction.date) > utils.str_to_time(utils.get_time()):
             return False
         if transaction in self.mempool:
+            return False
+        if not self.search_owner(transaction.data['vk'], transaction.data['message'].split("'")[3]):
             return False
         if transaction.verify():
             self.mempool.append(transaction)
@@ -132,6 +135,23 @@ class Blockchain(object):
         for b in self.chain:
             b.log()
 
+    def search_owner(self, public_key, serial_number_hash):
+        owner = None
+        for block in self.chain:
+            for transaction in block.transactions:
+                if transaction.data['message'].split("'")[3] == serial_number_hash:
+                    owner = transaction.data['message'].split("'")[7]
+        if owner == public_key or owner == None:
+            return True
+        else:
+            return False
+
+def create_message_str(serialNo, hashPublicKeyBuyer):
+    d = {
+        "serialNo": serialNo,
+        "hashPublicKeyBuyer": hashPublicKeyBuyer
+    }
+    return str(d)
 
 def merge_test():
     from ecdsa import SigningKey
@@ -196,6 +216,9 @@ def simple_test():
     print(blockchain)
     print(b.validity())
     print(len(blockchain))
+
+
+
 
 
 def test_bike():
