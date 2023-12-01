@@ -19,7 +19,7 @@ class BlockchainApp:
         self.menu_label.pack()
 
 
-        image = Image.open("logo.ico")  # Remplacez "path/vers/votre/logo.png" par le chemin de votre fichier image
+        image = Image.open("assets/logo.ico")  # Remplacez "path/vers/votre/logo.png" par le chemin de votre fichier image
         image = image.resize((100, 100))
         logo = ImageTk.PhotoImage(image)
 
