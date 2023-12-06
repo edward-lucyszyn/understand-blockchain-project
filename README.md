@@ -1,4 +1,4 @@
-# Project: Understand Blockchain with BikeChain
+# Understand Blockchain with BikeChain
 
 ## Introduction
 
